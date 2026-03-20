@@ -9,116 +9,68 @@
     <meta name="theme-color" content="#D4AF37">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="apple-touch-icon" href="https://img.icons8.com/ios-filled/512/D4AF37/speed.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     
     <style>
         :root { --gold: #D4AF37; --navy: #000d26; }
-        body { 
-            background-color: #050505; 
-            color: white; 
-            font-family: 'Inter', sans-serif; 
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-        }
+        body { background-color: #050505; color: white; font-family: 'Inter', sans-serif; margin: 0; overflow: hidden; }
         .tech-font { font-family: 'Orbitron', sans-serif; }
-        .gold-text { color: var(--gold); }
         
-        /* SPLASH SCREEN STYLES */
+        /* PANTALLA DE CARGA (SPLASH) */
         #splash-screen {
-            position: fixed; 
-            inset: 0; 
-            background: #050505; 
-            z-index: 1000;
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            justify-content: center;
-            transition: opacity 1s ease-out;
+            position: fixed; inset: 0; background: #050505; z-index: 9999;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            transition: transform 0.8s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.5s;
         }
-        .loader-bar { width: 200px; height: 2px; background: rgba(212, 175, 55, 0.1); position: relative; margin-top: 25px; overflow: hidden; }
-        .loader-progress { position: absolute; height: 100%; width: 0%; background: var(--gold); box-shadow: 0 0 15px var(--gold); transition: width 0.3s; }
+        .loader-bar { width: 200px; height: 2px; background: rgba(212, 175, 55, 0.1); margin-top: 25px; position: relative; overflow: hidden; }
+        #progress { height: 100%; width: 0%; background: var(--gold); box-shadow: 0 0 15px var(--gold); transition: width 0.3s; }
         
-        /* MAIN DASHBOARD STYLES */
-        #main-dashboard { opacity: 0; transition: opacity 1.2s ease-in; display: none; }
-        .glass-panel { 
-            background: rgba(0, 13, 38, 0.6); 
-            border: 1px solid rgba(212, 175, 55, 0.2); 
-            backdrop-filter: blur(15px); 
-            border-radius: 1.5rem;
+        /* DASHBOARD PRINCIPAL */
+        #main-dashboard { 
+            min-height: 100vh; display: flex; flex-direction: column; padding: 1.5rem; 
+            opacity: 1; /* Lo dejamos visible por defecto detrás del splash */
         }
-        .btn-gold {
-            background: linear-gradient(135deg, #D4AF37 0%, #AA8A2E 100%);
-            color: #000d26;
-            font-weight: 700;
-            box-shadow: 0 10px 20px rgba(212, 175, 55, 0.2);
-        }
+        .glass-panel { background: rgba(0, 13, 38, 0.6); border: 1px solid rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px); border-radius: 1.5rem; }
+        .btn-gold { background: linear-gradient(135deg, #D4AF37 0%, #AA8A2E 100%); color: #000d26; font-weight: 700; }
     </style>
 </head>
 <body>
 
     <div id="splash-screen">
-        <div class="text-center">
-            <h1 class="tech-font text-gold tracking-[0.6em] text-3xl mb-1">GAUGE PROTOCOL</h1>
-            <p id="loading-text" class="text-[9px] uppercase tracking-[0.4em] text-white/40">Initializing Neural Link...</p>
-            <div class="loader-bar">
-                <div id="progress" class="loader-progress"></div>
-            </div>
-        </div>
+        <h1 class="tech-font text-gold tracking-[0.6em] text-3xl mb-1">GAUGE PROTOCOL</h1>
+        <p id="loading-text" class="text-[9px] uppercase tracking-[0.4em] text-white/40">Initializing Neural Link...</p>
+        <div class="loader-bar"><div id="progress"></div></div>
     </div>
 
-    <div id="main-dashboard" class="min-h-screen flex flex-col p-6 max-w-lg mx-auto">
-        
+    <div id="main-dashboard" class="max-w-lg mx-auto">
         <header class="flex justify-between items-start mt-8 mb-12">
             <div>
                 <h1 class="tech-font text-gold tracking-widest text-xl">GAUGE PROTOCOL</h1>
-                <p class="text-[8px] uppercase tracking-[0.5em] opacity-40">High-Performance Unit</p>
+                <p class="text-[8px] uppercase tracking-[0.5em] opacity-40">System Online</p>
             </div>
-            <div class="text-right">
-                <span id="status" class="text-[8px] border border-gold/40 text-gold px-3 py-1 rounded-full uppercase font-bold tracking-widest">Secure Link</span>
-            </div>
+            <span class="text-[8px] border border-gold/40 text-gold px-3 py-1 rounded-full uppercase font-bold tracking-widest">Linked</span>
         </header>
 
         <main class="flex-grow flex flex-col items-center justify-center space-y-10">
-            
-            <div class="relative w-72 h-72 rounded-full border border-gold/10 flex items-center justify-center shadow-[0_0_80px_rgba(212,175,55,0.03)]">
+            <div class="relative w-64 h-64 rounded-full border border-gold/10 flex items-center justify-center shadow-[0_0_80px_rgba(212,175,55,0.03)]">
                 <div class="text-center">
-                    <span id="rpmValue" class="tech-font text-6xl font-bold text-white">0</span>
+                    <span id="rpmValue" class="tech-font text-6xl font-bold">0</span>
                     <p class="text-[10px] tracking-[0.4em] text-gold/60 uppercase mt-2">RPM Status</p>
                 </div>
-                <svg class="absolute inset-0 w-full h-full -rotate-90">
-                    <circle cx="144" cy="144" r="140" stroke="currentColor" stroke-width="2" fill="transparent" class="text-gold/5" />
-                    <circle id="gauge-circle" cx="144" cy="144" r="140" stroke="currentColor" stroke-width="3" fill="transparent" stroke-dasharray="880" stroke-dashoffset="880" class="text-gold transition-all duration-500" />
-                </svg>
             </div>
 
-            <button onclick="ejecutarEscaneoVIP()" class="w-full btn-gold py-5 rounded-2xl tech-font tracking-[0.3em] text-[11px] uppercase active:scale-95 transition-transform duration-200">
+            <button onclick="ejecutarEscaneoVIP()" class="w-full btn-gold py-5 rounded-2xl tech-font tracking-[0.3em] text-[11px] uppercase shadow-lg">
                 Execute System Audit
             </button>
 
-            <div id="masterDiag" class="w-full glass-panel p-6 hidden">
-                <div id="vipErrorList" class="space-y-4">
-                    </div>
+            <div id="masterDiag" class="w-full glass-panel p-6 hidden text-left">
+                <div id="vipErrorList" class="space-y-4"></div>
             </div>
-
         </main>
-
-        <footer class="mt-auto py-10 text-center">
-            <p class="text-[8px] tracking-[0.7em] opacity-20 uppercase">Property of Gauge Protocol | 2026</p>
-        </footer>
     </div>
 
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW fail', err));
-            });
-        }
-    </script>
     <script src="diag.js"></script>
 </body>
 </html>
