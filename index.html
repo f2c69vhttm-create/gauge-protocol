@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GAUGE PROTOCOL | High-Performance Diagnostics</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --gold: #D4AF37; --navy: #000d26; }
+        body { background-color: #050505; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
+        .tech-font { font-family: 'Orbitron', sans-serif; }
+        .gold-text { color: var(--gold); }
+        
+        /* Estilos de la Pantalla de Carga */
+        #splash-screen {
+            position: fixed; inset: 0; background: #050505; z-index: 100;
+            display: flex; flex-col; align-items: center; justify-content: center;
+            transition: opacity 1s ease-out;
+        }
+        .loader-bar { width: 250px; height: 2px; background: rgba(212, 175, 55, 0.1); position: relative; margin-top: 20px; overflow: hidden; }
+        .loader-progress { position: absolute; height: 100%; width: 0%; background: var(--gold); box-shadow: 0 0 15px var(--gold); transition: width 0.2s; }
+        
+        /* Dashboard Principal (Oculto al inicio) */
+        #main-dashboard { opacity: 0; transition: opacity 1.5s ease-in; }
+        .glass-panel { background: rgba(0, 13, 38, 0.6); border: 1px solid rgba(212, 175, 55, 0.2); backdrop-filter: blur(10px); }
+    </style>
+</head>
+<body>
+
+    <div id="splash-screen">
+        <div class="text-center">
+            <h1 class="tech-font text-gold tracking-[0.5em] text-2xl mb-2">GAUGE PROTOCOL</h1>
+            <p id="loading-text" class="text-[8px] uppercase tracking-[0.3em] opacity-50">Initializing Secure Link...</p>
+            <div class="loader-bar">
+                <div id="progress" class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-dashboard" class="min-h-screen flex flex-col p-6">
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="tech-font text-gold tracking-widest text-lg">GAUGE PROTOCOL</h1>
+                <p class="text-[7px] uppercase tracking-[0.4em] opacity-40">Advanced Telemetry Unit</p>
+            </div>
+            <span id="status" class="text-[9px] border border-gold/30 text-gold px-3 py-1 rounded-full uppercase tracking-tighter font-bold">Encrypted Connection</span>
+        </header>
+
+        <main class="flex-grow flex flex-col items-center justify-center space-y-8">
+            <div class="w-64 h-64 rounded-full border-2 border-gold/10 flex items-center justify-center relative shadow-[0_0_60px_rgba(212,175,55,0.05)]">
+                <div class="text-center">
+                    <span id="rpmValue" class="tech-font text-5xl font-bold">0</span>
+                    <p class="text-[9px] tracking-[0.3em] opacity-40 uppercase mt-2">Engine RPM</p>
+                </div>
+            </div>
+
+            <button onclick="ejecutarEscaneoVIP()" class="glass-panel border-gold/40 text-gold px-10 py-4 rounded-lg tech-font tracking-[0.2em] text-[10px] hover:bg-gold hover:text-navy transition-all duration-500 shadow-xl shadow-gold/10">
+                RUN SYSTEM AUDIT
+            </button>
+
+            <div id="masterDiag" class="w-full max-w-md glass-panel p-6 rounded-xl hidden">
+                <div id="vipErrorList" class="space-y-4"></div>
+            </div>
+        </main>
+
+        <footer class="mt-auto py-6 text-center opacity-20 text-[7px] tracking-[0.5em] uppercase">
+            Hyper-Sport Standard | 2026
+        </footer>
+    </div>
+
+    <script src="diag.js"></script>
+</body>
+</html>
