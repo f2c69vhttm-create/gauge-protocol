@@ -1,92 +1,58 @@
-// --- CONFIGURACIÓN DE LA SECUENCIA DE INICIO ---
-const messages = [
-    "Authenticating ECU Protocol...",
-    "Linking Bluetooth OBDII...",
-    "Decrypting Vehicle CAN-BUS...",
-    "Loading Hyper-Sport Database...",
-    "SYSTEM ONLINE"
-];
-
+const messages = ["Authenticating ECU...", "Linking Bluetooth...", "Decrypting CAN-BUS...", "SYSTEM READY"];
 let progress = 0;
-let messageIndex = 0;
+let msgIdx = 0;
 
-const progressElement = document.getElementById('progress');
-const loadingText = document.getElementById('loading-text');
+const progBar = document.getElementById('progress');
+const loadTxt = document.getElementById('loading-text');
+const splash = document.getElementById('splash-screen');
 
-// Bucle de carga de la barra
-const interval = setInterval(() => {
-    progress += Math.random() * 12; // Velocidad de carga aleatoria
+const loadInterval = setInterval(() => {
+    progress += Math.random() * 15;
     if (progress > 100) progress = 100;
     
-    progressElement.style.width = `${progress}%`;
+    progBar.style.width = `${progress}%`;
     
-    // Cambiar el texto de carga según el progreso
-    if (progress > (messageIndex + 1) * 20 && messageIndex < messages.length) {
-        loadingText.innerText = messages[messageIndex];
-        messageIndex++;
+    if (progress > (msgIdx + 1) * 25 && msgIdx < messages.length) {
+        loadTxt.innerText = messages[msgIdx];
+        msgIdx++;
     }
 
-    // CUANDO LLEGA AL 100%
     if (progress >= 100) {
-        clearInterval(interval);
-        
+        clearInterval(loadInterval);
         setTimeout(() => {
-            // 1. Desvanecer la pantalla de carga
-            const splash = document.getElementById('splash-screen');
-            splash.style.opacity = '0';
-
-            // 2. ACTIVAR EL DASHBOARD (Aquí estaba el error)
-            const dashboard = document.getElementById('main-dashboard');
-            dashboard.style.display = 'flex'; // Cambiamos de 'none' a 'flex'
+            // EFECTO DE SALIDA: Deslizar hacia arriba y desaparecer
+            splash.style.transform = "translateY(-100%)";
+            splash.style.opacity = "0";
+            document.body.style.overflow = "auto";
             
-            setTimeout(() => {
-                splash.style.display = 'none';
-                dashboard.style.opacity = '1';
-                document.body.style.overflow = 'auto';
-            }, 1000);
-        }, 500);
+            // Eliminar del DOM después de la animación para que no estorbe
+            setTimeout(() => { splash.remove(); }, 800);
+        }, 600);
     }
-}, 250);
+}, 200);
 
-// --- DICCIONARIO DE DIAGNÓSTICO VIP ---
-const VIP_DATABASE = {
-    "P0300": {
-        titulo: "Misfire Detected (Cilindros Múltiples)",
-        solucion: "Reemplazar bujías de Iridio y bobinas de encendido.",
-        pieza: "Ignition Coil & Spark Plug Set",
-        urgencia: "CRITICAL"
-    },
-    "P0171": {
-        titulo: "System Too Lean (Mezcla Pobre)",
-        solucion: "Limpiar sensor MAF y revisar fugas de vacío.",
-        pieza: "Mass Air Flow Sensor",
-        urgencia: "WARNING"
-    }
-};
-
-// Función para ejecutar el escaneo
 function ejecutarEscaneoVIP() {
     const list = document.getElementById('vipErrorList');
     const panel = document.getElementById('masterDiag');
-    
     panel.classList.remove('hidden');
-    list.innerHTML = `<p class="text-[9px] text-gold tech-font mb-4 tracking-widest">AUDIT RESULTS:</p>`;
+    list.innerHTML = `<p class="text-[9px] text-gold tech-font mb-4 tracking-widest uppercase">Audit Results:</p>`;
 
-    // Simulamos la lectura de códigos
-    ["P0300", "P0171"].forEach(code => {
-        const data = VIP_DATABASE[code];
+    const faults = [
+        {c: "P0300", t: "Misfire Detected", s: "Replace Ignition Coils", u: "CRITICAL"},
+        {c: "P0171", t: "Lean Condition", s: "Clean MAF Sensor", u: "WARNING"}
+    ];
+
+    faults.forEach(f => {
         const div = document.createElement('div');
         div.className = "p-4 border border-white/5 bg-navy/20 rounded-xl mb-3";
         div.innerHTML = `
-            <div class="flex justify-between items-center mb-1">
-                <span class="text-gold font-bold tech-font text-[10px]">${code}</span>
-                <span class="text-[7px] ${data.urgencia === 'CRITICAL' ? 'text-red-500' : 'text-yellow-500'} font-bold tracking-tighter">${data.urgencia}</span>
+            <div class="flex justify-between text-[10px] font-bold tech-font mb-1">
+                <span class="text-gold">${f.c}</span>
+                <span class="${f.u === 'CRITICAL' ? 'text-red-500' : 'text-yellow-500'}">${f.u}</span>
             </div>
-            <p class="text-white text-xs font-bold">${data.titulo}</p>
-            <p class="text-[9px] opacity-50 mt-2 font-light">REPAIR: ${data.solucion}</p>
+            <p class="text-white text-xs font-bold">${f.t}</p>
+            <p class="text-[9px] opacity-50 mt-1 uppercase tracking-tighter">Fix: ${f.s}</p>
         `;
         list.appendChild(div);
     });
-    
-    alert("System Audit Complete: 2 Critical Issues Identified.");
 }
